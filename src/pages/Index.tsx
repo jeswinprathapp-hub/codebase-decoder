@@ -1,16 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useCallback } from "react";
+import { LandingHero } from "@/components/LandingHero";
+import { AnalysisLoader } from "@/components/AnalysisLoader";
+import { Dashboard } from "@/components/Dashboard";
+import { sampleAnalysis } from "@/lib/mockData";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
-  return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
-  );
+type View = "landing" | "loading" | "dashboard";
+
+const Index = () => {
+  const [view, setView] = useState<View>("landing");
+
+  const handleAnalyze = useCallback(() => {
+    setView("loading");
+  }, []);
+
+  const handleLoaded = useCallback(() => {
+    setView("dashboard");
+  }, []);
+
+  if (view === "loading") return <AnalysisLoader onComplete={handleLoaded} />;
+  if (view === "dashboard") return <Dashboard data={sampleAnalysis} onBack={() => setView("landing")} />;
+  return <LandingHero onAnalyze={handleAnalyze} />;
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
